@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css">
+    <link rel="stylesheet" href="shopping.css">
+    <title>Document</title>
+</head>
+
+<body>
+<nav class="navbar navbar-dark bg-dark fixed-top justify-content-between" style="background-color: #69016d !important;">
+    <a class="navbar-brand text-white" style="font-weight: 800;"><i class="fa fa-life-ring fa-2x"></i></a>
+    <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</nav>
+    <div class="sidebar">
+        <ul class="sidebar-nav">
+            <li>
+                <a id="navbar-toggle"> <i class="fa fa-bars menu-icon fa-2x" aria-hidden="true"></i></a>
+            </li>
+            <li>
+                <a onclick="back_to_home_func()">HOME<i class="fa fa-dashboard menu-icon fa-2x" aria-hidden="true"></i></a>
+            </li>
+            <li>
+                <a onclick="add_category()">CATEGORIES<i class="fa fa-list-alt menu-icon fa-2x" aria-hidden="true"></i></a>
+            </li>
+            <li>
+                <a onclick="display_add_items_div()" title="Add Items">ADD ITEMS<i class="fa fa-plus-circle menu-icon fa-2x" aria-hidden="true"></i></a>
+            </li>
+            <li>
+                <a onclick="display_all_items_local()" title="Show all Items">ALL ITEMS<i class="fa fa-list menu-icon fa-2x"
+                        aria-hidden="true"></i></a>
+            </li>
+
+            <li>
+                <a onclick="display_all_categories_card()" title="Displays all category">ALL_CAT<i class="fa fa-eye menu-icon fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+
+            <li>
+                <a onclick="display_all_userStore()" title="Users Store">USERS STORE<i class="fa fa-database menu-icon fa-2x"
+                    aria-hidden="true"></i>
+                </a>
+            </li>
+
+            <li>
+                <a onclick="display_list_users()" title="List of all users">ALL USERS<i class="fa fa-user-circle menu-icon fa-2x"
+                        aria-hidden="true"></i>
+                </a>
+            </li>
+
+            <li>
+                <a onclick="display_accounts()" title="Accounts">ACCOUNT<i class="fa fa-line-chart menu-icon fa-2x"
+                        aria-hidden="true"></i>
+                </a>
+            </li>
+
+            <li>
+                <a onclick="display_all_history()" title="All history">ALL_HIST<i class="fa fa-history menu-icon fa-2x"
+                        aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+        <div class="container">
+
+            <div class="row ml-5 mt-5">
+
+
+                <div class="col-md-12 animate__animated animate__fadeInUp" id="display_all_items" style="box-shadow: 0 10px 10px rgba(41, 40, 40, 0.22); margin-top: 90px;display: none; overflow: scroll; height: 500px; ">
+                    <table class="table table-bordered bg-light">
+                        <thead>
+                            <th>S/N</th>
+                            <th>CATEGORY</th>
+                            <th>LABEL</th>
+                            <th>PRICE</th>
+                            <th>QUANTITY</th>
+                            <th>PICTURES</th>
+                            <th>TOTAL</th>
+                            <th>ADD_QUANTITY</th>
+                            <th>ACTIONS</th>
+                        </thead>
+
+                        <tbody id="display_items_from_store">
+                                    <!-- Display what we got from localstorage -->
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+            </div>
+
+            <!-- MODAL FOR DELETING AN ITEM -->
+
+            <div class="row mx-auto justify-content-center mt-5">
+                    <div class="col-md-12 animate__animated animate__fadeInUp" id="add_items" style="display: none;">
+                        <div class="card bg-light" style="box-shadow: 0 10px 10px rgba(41, 40, 40, 0.22); margin-top: 90px;">
+                            <div class="card-body">
+                                <!-- <form> -->
+                                    <h4 class="text-center" id="add_items_text">ADD ITEMS</h4>
+                                    <select name="" id="collections_from_db" class="form-control">
+                                        <!-- Those data will display here -->
+                                    </select><br />
+                                    <input type="text" name="" placeholder="Label" class="form-control" id="item"><br />
+                                    <input type="text" name="" placeholder="price" class="form-control" id="price"><br />
+                                    <input type="text" name="" placeholder="quantity" class="form-control" id="quantity"><br />
+                                    <input type="file" name="" class="form-control" onchange="showFile(this)"><br />
+                                    <input type="button" name="" value="Add" id="" class="form-control btn btn-secondary text-white"
+                                    onclick="additems(`${item.value}`)">
+
+                                    <!-- </form> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- MODAL FOR PUSHING TO THE HISTORY -->
+                    <div id="myModal" class="modals">
+
+                        <!-- Modal content -->
+                        <div class="modal-contents">
+                    <span class="pulser text-center"></span>
+                    <label class="text-danger" style="margin-left:80px; font-weight: 800;">Pushing to users...</label>
+                    <!-- <span class="spinner-border" style="width: 120px; height: 120px; color: purple;"></span> -->
+                </div>
+
+            </div>
+
+
+                <div id="myModals" class="modals2">
+
+                    <!-- Modal content -->
+                    <div class="modal-contents2">
+                       <div class="card" style="border: none;">
+                            <div class="card-body">
+                                THIS ACTION WILL DELETE ALL THESE ITEMS FROM YOUR DATABASE, BUT YOU CAN RECOVER THEM FROM YOUR HISTORY TAB<br>
+                                PROCEED?
+                            </div>
+                            <div class="myfooter">
+                                <button class="btn btn-outline-success text-success ml-3">NO</button>
+                                <button class="btn btn-outline-danger text-danger" onclick="show_modal_for_push(`${categories_name}`, `${alldates}`)">YES</button>
+                            </div>
+                       </div>
+                    </div>
+
+                </div>
+
+            <!-- DELETE MODAL -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body" id="modalBody">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-light text-success" data-dismiss="modal">NO</button>
+                                        <button type="button" class="btn btn-outline-light text-danger" data-dismiss="modal"
+                                            onclick="deleteitem(`${id_for_delete}`)" onmouseup="deleteitems(`${id_for_delete}`)", onmousedown="deletecategory(`${id_for_delete}`)">YES</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <h4 class="text-center mt-3 mb-2">EDIT CONTENTS</h4>
+                        <div class="modal-body" id="editModalbody">
+                            <select name="" class="form-control" id="new_selection"></select><br>
+                            <input type="text" name="" id="label_input" class="form-control"><br>
+                            <input type="text" name="" id="price_input" class="form-control"><br>
+                            <input type="text" name="" id="quantity_input" class="form-control"><br>
+                            <div id="display_former_img">
+
+                            </div>
+                            <input type="file" name="" class="form-control" id="" onchange="showFile(this)">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-light text-success" data-dismiss="modal">NO</button>
+                            <button type="button" class="btn btn-outline-light text-danger" data-dismiss="modal"
+                                onclick="update_items_in_localstorage(`${updateId}`)", onmouseup="update_User_items(`${updateId}`)">YES</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row animate__animated animate__fadeInUp mx-auto justify-content-center" id="add_categories" style="display: none;">
+                <div class="col-md-12">
+                        <div class="card shadow bg-light" style="border: none; box-shadow: 0 10px 10px rgba(41, 40, 40, 0.22); margin-top: 90px;">
+                               <div class="card-body">
+                                    <h4 class="text-center mb-4" id="add_category_text">ADD CATEGORY</h4>
+                                    <input type="text" name="" id="category_input" placeholder="Type in category"  class="form-control"><br>
+                                    <button onclick="add_category_func(`${category_input.value}`)" class="form-control btn btn-dark text-light"> <span class="fa fa-plus-circle fa-2x"></span> </button>
+                               </div>
+                        </div>
+                </div>
+
+            </div>
+
+            <div id="display_categories">
+                <div class="row animate__animated animate__fadeInUp mt-2 ml-5">
+                <div class="col-md-8">
+                        <div class="card mt-3"
+                            style="height: 300px; background: white;border-bottom-right-radius: 50px">
+                            <div class="card-content">
+                                 <canvas id="myChart2" width="400" height="170" class="mb-1" style="background: white">
+                            </div>
+                        </div>
+                    </div> 
+
+                       <div class="col-md-4">
+                        <div class="card mt-3"
+                            style="height: 300px; background: white;border-bottom-right-radius: 50px">
+                            <div class="card-content">
+                                <h4 class="text-center" style="font-weight: 800">REVENUE</h4>
+                                 <canvas id="myChart3" height="230" class="mb-1" style="background: white">
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            <div class="row animate__animated animate__fadeInUp mt-2 ml-5">
+                    <div class="col-md-12">
+                            <table class="table table-bordered bg-light" style="box-shadow: 0 10px 10px rgba(41, 40, 40, 0.22); margin-top: 90px;">
+                                 <thead>
+                                     <th>S/N</th>
+                                     <th>COLLECTIONS</th>
+                                     <th>NO. OF PRODUCTS</th>
+                                 </thead>
+                                 <tbody id="show_all_collection">
+
+                                 </tbody>
+                            </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="show_categories_to_admin" style="display:none">
+                <h5 class="text-center mt-2" style="font-weight: 800; font-size: 2em;">CLICK ON ANY OF THE CATEGORIES TO DISPLAY ITEMS</h5>
+                <div class="row mx-auto justify-content-center mt-5 animate__animated animate__fadeInUp" id="show_cards">
+                </div>
+            </div>
+
+            <div id="show_items_to_admin" style="display:none">
+                <div style="font-weight: 800;display:none; font-size: 4rem;" class="text-danger text-center mt-5" id="no_collections">NO COLLECTIONS HERE YET!</div>
+                 <div class="text-center text-danger" style="font-weight: 800;font-size: 4rem;" id="display_name_of_category"></div>
+                <div class="row mx-auto justify-content-center mt-5" id="show_cards2">
+                </div>
+                <div id="display_button_for_users" class="fixed-bottom">
+                    <button class="btn btn-light float-right m-3 text-success" onclick="push_to_users()">DISPLAY TO USERS</button>
+                </div>
+            </div>
+
+
+            <div id="history_div" style="display: none;">
+                <div id="second_history_div" style="display: none;">
+                <div class="row animate__animated animate__fadeInUp mt-2 ml-5" id="display_hist">
+                    <div class="col-md-12">
+                        <h5 class="text-center text-white mt-5">CLICK TO DISPLAY HISTORY</h5>
+                        <select name="" class="form-control" id="selectedDateHist" onclick="showDate()">
+                            
+                        </select>
+                    </div>
+                    <a class="btn-floating btn-large waves-effect waves-light red mt-3" onclick="display_date_related_cates(`${mydate}`)"><i class="material-icons">add</i></a>
+
+                </div>
+            </div>
+                <div id="hist_cate_div" style="display: none;">
+                    <div class="row animate_animated animate_fadeInUp" id="row_hist_for_categories">
+
+                    </div>
+                </div>
+
+                <div id="hist_store_div" style="display: none;">
+                    <div class="row animate_animated animate_fadeInUp" id="row_hist_for_stores">
+
+                    </div>
+                </div>
+
+            </div>
+
+<!-- USERS STORE -->
+            <div id="usersStore" style="display: none;">
+                <div class="row animate__animated animate__fadeInUp mt-5 ml-5">
+                    <table class="table table-bordered bg-light">
+                        <thead>
+                            <th>S/N</th>
+                            <th>CATEGORY</th>
+                            <th>ACTION</th>
+                        </thead>
+
+                        <tbody id="display_usersStore_table">
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div id="new_store">
+                <div class="row" id="display_user_items">
+                    <!-- <div id="display_user_items">
+
+                    </div> -->
+                </div>
+            </div>
+
+
+
+
+            <!-- USERS LIST STARTS HERE -->
+              <div id="usersList">
+                    <div class="row">
+
+                    </div>
+              </div>
+            <!-- USERS LIST ENDS HERE -->
+
+
+
+
+           <!-- USERS LIST STARTS HERE -->
+              <div id="accountDiv" style="display: none;">
+                    <div class="row animate__animated animate__fadeInUp mt-5" id="dropDowndates">
+
+                        <div id="dates__select_tab">
+                        <div class="col-md-12">
+                              <h4 style="font-weight: 800" class="text-center text-white">SELECT ANY DATE TO DISPLAY ACCOUNT</h4>
+                               <select name="" id="dates_from_db" class="form-control text-center" onclick="displayrelateddates()">
+
+                               </select>
+
+                        </div>
+                        </div>
+
+
+
+                            <!-- <div> -->
+                                <!-- <div class="col-md-12"> -->
+
+                                <!-- </div> -->
+
+                            <!-- </div> -->
+
+
+                        <div id="table__for_acct" style="display: none;">
+                            <div class="col-md-12">
+                              <h4 style="font-weight: 800" class="text-center mb-4" id="myDates"></h4>
+
+                              <canvas id="myChart" width="800" height="450" class="mb-4">
+
+                              </canvas>
+
+                            <table class="table table-bordered bg-light responsive-table">
+                                <thead>
+                                    <th>PRODUCT ID</th>
+                                    <th>PRODUCT</th>
+                                    <th>CATEGORY</th>
+                                    <th>INITIAL QTY</th>
+                                    <th>QTY SOLD</th>
+                                    <th>REMAINING QTY</th>
+                                    <th>PRICE</th>
+                                    <th>TOTAL SALES MADE (price * sales)</th>
+
+                                <tbody id="display_accountAdmin_tables">
+
+                                </tbody>
+
+                            </table>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="fixed-action-btn" onclick="display_this_account(`${selectionDate}`)" id="view_date_detail">
+                                  <a class="btn-floating btn-large red">
+                                    <i class="fa fa-eye"></i>
+                                  </a>
+
+                        </div>
+              </div>
+            <!-- USERS LIST ENDS HERE -->
+
+            </div>
+    </div>
+            <!-- This is for all categories will be displayed -->
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="shopping.js"></script>
+
+</html>
